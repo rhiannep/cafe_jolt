@@ -1,0 +1,21 @@
+<p id="notice"><%= notice %></p>
+
+<h1>Cafe Jolt Menu</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th colspan="3"></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @menu_items.each do |menu_item| %>
+      <tr>
+        <td><%= menu_item["name"] %></td>
+        <td><%= menu_item["description"] %></td>
+        <td><%= menu_item["stock_level"] %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
