@@ -1,24 +1,7 @@
-# README
+# Cafe Jolt
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
-
-Things you may want to cover:
-
-* Ruby version
-
-* System dependencies
-
-* Configuration
-
-* Database creation
-
-* Database initialization
-
-* How to run the test suite
-
-* Services (job queues, cache servers, search engines, etc.)
-
-* Deployment instructions
-
-* ...
+This implementation has:
+* Two models, one for `Order` and one for `OrderItem`,
+* a service to get items from the external API
+* an index action and view to index the menu items from the API
+* A form view and controller actions to create order
