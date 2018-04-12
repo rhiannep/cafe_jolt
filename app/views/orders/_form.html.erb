@@ -1,0 +1,30 @@
+<h3>Items</h3>
+<%= form_for order do |f| %>
+  <% if order.errors.any? %>
+    <div id="error_explanation">
+
+      <div class="alert alert-danger" role="alert">
+        <p>There was a problem with your order</p>
+        <ul>
+      <% order.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+      </ul></div>
+    </div>
+  <% end %>
+  <table class="table" id='order_items'>
+    <tbody>
+      <%= f.fields_for :order_items do |order_item| %>
+        <tr>
+        <%= render 'order_item_fields', :f => order_item %>
+        </tr>
+      <% end %>
+      <tr>
+      <div class='links'>
+        <%= link_to_add_association 'Add a new item', f, :order_items, { class: "btn btn-default" } %>
+      </div>
+      </tr>
+   </tbody>
+  </table>
+    <%= f.submit 'Save', { class: "btn btn-primary" }  %>
+<% end %>
