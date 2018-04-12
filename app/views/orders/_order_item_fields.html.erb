@@ -1,0 +1,11 @@
+<tr class='nested-fields'>
+   <td class="field">
+     <%= f.select :menu_item_id, options_for_select(@menu_items.map{|item| ["#{item["name"]} (#{item["stock_level"]} left)", item["id"]]}), {}, { class: "form-control" } %>
+   </td>
+   <td class="field form-group">
+     <%= f.number_field :quantity, min: 1, max: nil, class: "form-control", placeholder: "how many?"%>
+   </td>
+   <td>
+     <%= link_to_remove_association "Remove Item", f, { class: "btn btn-default" }%>
+   </td>
+ </tr>

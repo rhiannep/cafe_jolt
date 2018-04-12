@@ -1,5 +1,11 @@
 <h1>Cafe Jolt Menu</h1>
 
+<% if notice %>
+<div class="alert alert-success" role="alert"><%= notice %></div>
+<% end %>
+
+<%= link_to 'Create an order', new_order_path, { class: "btn btn-default"}%>
+
 <table class="table">
   <thead>
     <tr>
@@ -22,3 +28,6 @@
     <% end %>
   </tbody>
 </table>
+
+
+<br/>
