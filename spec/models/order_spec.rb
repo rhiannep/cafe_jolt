@@ -1,4 +1,4 @@
-require "spec_helper"
+require "rails_helper"
 
 describe Order do
   describe "#create" do
@@ -22,7 +22,7 @@ describe Order do
       order_attributes = { order_items_attributes: [{ quantity: 2, menu_item_id: "menu_item_id"}]}
       order = Order.create(order_attributes)
 
-      expect(order.errors[:order_items]).to include("is invalid")
+      expect(order.errors.any?).to be true
     end
   end
 end
