@@ -1,0 +1,19 @@
+<h1>Order #<%= @order.id %></h1>
+
+<% if notice %>
+<div class="alert alert-success" role="alert"><%= notice %></div>
+<% end %>
+<div class="label label-default">
+  <%= "Order #{@order.status}"%>
+</div>
+<h3>Order Items</h3>
+<table class="table">
+  <tbody>
+    <% @order.order_items.each do |order_item| %>
+    <tr>
+      <td><%= order_item.id %></td>
+      <td><%= order_item.quantity %></td>
+    </tr>
+    <% end %>
+  </tbody>
+</table>

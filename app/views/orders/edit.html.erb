@@ -1,0 +1,18 @@
+<h1>Update Order #<%= @order.id %></h1>
+<% if notice %>
+<div class="alert alert-success" role="alert"><%= notice %></div>
+<% end %>
+<% if @order.status == "pending" %>
+<%= link_to "Send order to kitchen", order_path, method: :put, class: "btn btn-default" %>
+<% end %>
+<h3>Order Items</h3>
+<table class="table">
+  <tbody>
+    <% @order.order_items.each do |order_item| %>
+    <tr>
+      <td><%= order_item.id %></td>
+      <td><%= order_item.quantity %></td>
+    </tr>
+    <% end %>
+  </tbody>
+</table>
