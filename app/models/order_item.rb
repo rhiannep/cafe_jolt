@@ -12,10 +12,10 @@ class OrderItem < ApplicationRecord
   end
 
   def current_stock_level
-    MenuItemFetcher.stock_level(menu_item_id)
+    MenuItemFetcher.stock_level_for(menu_item_id)
   end
 
   def name
-    MenuItemFetcher.name(menu_item_id)
+    MenuItemFetcher.name_for(menu_item_id)
   end
 end
