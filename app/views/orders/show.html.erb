@@ -1,19 +1,44 @@
-<h1>Order #<%= @order.id %></h1>
+<div class="form-group">
+  <h1>Order #<%= @order.id %></h1>
+  <div class="label label-default">
+    <%= @order.status%>
+  </div>
+</div>
 
 <% if notice %>
 <div class="alert alert-success" role="alert"><%= notice %></div>
 <% end %>
-<div class="label label-default">
-  <%= "Order #{@order.status}"%>
+
+<% if @errors %>
+  <div id="error_explanation">
+    <div class="alert alert-danger" role="alert">
+      <p>The kitchen had a problem processing your order</p>
+      <ul>
+    <% @errors.each do |error| %>
+      <li><strong><%= error["title"] %></strong></li>
+      <p><%= error["details"] %></p>
+    <% end %>
+    </ul></div>
+  </div>
+<% end %>
+
+<% if @order.status == "pending" %>
+<div>
+<%= link_to "Send order to kitchen", order_path(@order), method: :put, class: "btn btn-primary  " %>
 </div>
+<% end %>
+
+
 <h3>Order Items</h3>
 <table class="table">
   <tbody>
     <% @order.order_items.each do |order_item| %>
     <tr>
-      <td><%= order_item.id %></td>
+      <td><%= order_item.menu_item_id %></td>
       <td><%= order_item.quantity %></td>
     </tr>
     <% end %>
   </tbody>
 </table>
+
+<%= link_to 'Make a new order', new_order_path, { class: "btn btn-default "}%>
