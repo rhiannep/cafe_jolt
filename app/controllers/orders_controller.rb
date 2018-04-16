@@ -27,14 +27,13 @@ class OrdersController < ApplicationController
   def update
     @order = Order.find(params["id"])
 
-    api_response = JobPoster.new(@order).send_order_to_kitchen
+    kitchen_response = JobPoster.new(@order).send_order_to_kitchen
 
-    if api_response.success?
+    if kitchen_response.success?
       @order.update(status: "in progress")
-
-      # Code to initiate 
+      # Code to run job that listens to kitchen api goes here
     else
-      @errors = JSON.parse(api_response.body)["errors"]
+      @errors = JSON.parse(kitchen_response.body)["errors"]
       @order.update(status: "rejected by kitchen")
     end
 
