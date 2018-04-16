@@ -1,26 +1,54 @@
 class OrdersController < ApplicationController
-  # GET /orders/new
   def new
-    @order = Order.new
     @menu_items = MenuItemFetcher.menu_items
+    @order = Order.new
   end
 
-  # POST /orders
   def create
     @order = Order.new(order_params)
-    @menu_items = MenuItemFetcher.menu_items
 
     if @order.save
-      redirect_to menu_items_path, notice: 'Order was successfully created'
+      redirect_to edit_order_url(@order), notice: 'Order successfully created, pending payment'
       return
-    else
-      render :new
     end
+
+    @menu_items = MenuItemFetcher.menu_items
+    render :new
+  end
+
+  def show
+    @order = Order.find(params["id"])
+  end
+
+  def edit
+    @order = Order.find(params["id"])
+  end
+
+  def update
+    @order = Order.find(params["id"])
+
+    api_response = JobPoster.new(@order).post_order
+
+    if api_response.success?
+      @order.update(status: "in progress")
+      redirect_to @order
+    end
+
+    errors = JSON.parse(api_response.body)["errors"]
+
+    @order.update(status: "errors")
+
+    errors.each do |error|
+      @order.errors.add(error["title"], error["details"])
+    end
+
+    @menu_items = MenuItemFetcher.menu_items
+    render :new
   end
 
   private
 
   def order_params
-    params.require(:order).permit(order_items_attributes: [:menu_item_id, :quantity, :_destroy])
+    params.require(:order).permit(order_items_attributes: [:menu_item_id, :menu_item_name, :quantity, :_destroy])
   end
 end
