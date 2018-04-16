@@ -5,7 +5,7 @@ class Order < ApplicationRecord
   accepts_nested_attributes_for :order_items, reject_if: :all_blank, allow_destroy: true
 
   def send_to_kitchen
-    response = JobPoster.new(self).post_order
+    response = JobPoster.new(self).send_order_to_kitchen
 
     if response.success?
       update(status: "in progress")

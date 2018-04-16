@@ -8,7 +8,7 @@ class OrdersController < ApplicationController
     @order = Order.new(order_params)
 
     if @order.save
-      redirect_to edit_order_url(@order), notice: 'Order successfully created, pending payment'
+      redirect_to @order, notice: 'Order successfully created, pending payment'
       return
     end
 
@@ -16,34 +16,29 @@ class OrdersController < ApplicationController
     render :new
   end
 
-  def show
+  def edit
     @order = Order.find(params["id"])
   end
 
-  def edit
+  def show
     @order = Order.find(params["id"])
   end
 
   def update
     @order = Order.find(params["id"])
 
-    api_response = JobPoster.new(@order).post_order
+    api_response = JobPoster.new(@order).send_order_to_kitchen
 
     if api_response.success?
       @order.update(status: "in progress")
-      redirect_to @order
+
+      # Code to initiate 
+    else
+      @errors = JSON.parse(api_response.body)["errors"]
+      @order.update(status: "rejected by kitchen")
     end
 
-    errors = JSON.parse(api_response.body)["errors"]
-
-    @order.update(status: "errors")
-
-    errors.each do |error|
-      @order.errors.add(error["title"], error["details"])
-    end
-
-    @menu_items = MenuItemFetcher.menu_items
-    render :new
+    render :show
   end
 
   private

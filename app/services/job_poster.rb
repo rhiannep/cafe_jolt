@@ -6,7 +6,7 @@ class JobPoster
     @order = order
   end
 
-  def post_order
+  def send_order_to_kitchen
     response = self.class.post(
       "/jobs",
       body: to_request_body,
