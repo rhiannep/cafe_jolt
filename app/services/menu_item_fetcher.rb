@@ -13,5 +13,4 @@ module MenuItemFetcher
   def self.name_for(menu_item_id)
     self.get("/menu_items/#{menu_item_id}").parsed_response["name"]
   end
-
 end

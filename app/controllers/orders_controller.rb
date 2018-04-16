@@ -1,19 +1,19 @@
 class OrdersController < ApplicationController
   def new
-    @order = Order.new
     @menu_items = MenuItemFetcher.menu_items
+    @order = Order.new
   end
 
   def create
     @order = Order.new(order_params)
-    @menu_items = MenuItemFetcher.menu_items
 
     if @order.save
-      redirect_to edit_order_url(@order), notice: 'Order was successfully created'
+      redirect_to edit_order_url(@order), notice: 'Order successfully created, pending payment'
       return
-    else
-      render :new
     end
+
+    @menu_items = MenuItemFetcher.menu_items
+    render :new
   end
 
   def show
@@ -26,14 +26,29 @@ class OrdersController < ApplicationController
 
   def update
     @order = Order.find(params["id"])
-    # Send order to api here and do error handling
-    @order.update(status: "in progress")
-    redirect_to @order
+
+    api_response = JobPoster.new(@order).post_order
+
+    if api_response.success?
+      @order.update(status: "in progress")
+      redirect_to @order
+    end
+
+    errors = JSON.parse(api_response.body)["errors"]
+
+    @order.update(status: "errors")
+
+    errors.each do |error|
+      @order.errors.add(error["title"], error["details"])
+    end
+
+    @menu_items = MenuItemFetcher.menu_items
+    render :new
   end
 
   private
 
   def order_params
-    params.require(:order).permit(order_items_attributes: [:menu_item_id, :quantity, :_destroy])
+    params.require(:order).permit(order_items_attributes: [:menu_item_id, :menu_item_name, :quantity, :_destroy])
   end
 end
