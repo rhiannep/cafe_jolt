@@ -1,7 +1,7 @@
 class OrdersController < ApplicationController
   def new
     @menu_items = MenuItemFetcher.menu_items
-    @order = Order.new
+    @form = OrderForm.new(Order.new)
   end
 
   def create

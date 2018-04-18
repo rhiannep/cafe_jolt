@@ -1,5 +1,6 @@
 class Order < Sequel::Model
   plugin :validation_helpers
+  plugin :active_model
   plugin :nested_attributes
 
   one_to_many :order_items
