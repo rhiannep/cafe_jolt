@@ -1,6 +1,6 @@
 <h1>Cafe Jolt Menu</h1>
 
-<%= link_to 'Create an order', new_order_path, { class: "btn btn-default"}%>
+<%= link_to 'Create an order', new_order_path, { class: "btn btn-default" }%>
 
 <table class="table">
   <thead>
@@ -17,9 +17,9 @@
     </tr>
     <% @menu_items.each do |menu_item| %>
       <tr>
-        <td><%= menu_item["name"] %></td>
-        <td><%= menu_item["description"] %></td>
-        <td><%= menu_item["stock_level"] %></td>
+        <td><%= menu_item.name %></td>
+        <td><%= menu_item.description %></td>
+        <td><%= menu_item.stock_level %></td>
       </tr>
     <% end %>
   </tbody>

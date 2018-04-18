@@ -1,9 +1,12 @@
-class OrderItem < ApplicationRecord
-  belongs_to :order
+class OrderItem < Sequel::Model
+  many_to_one :order
+  plugin :validation_helpers
 
-  validates :quantity, presence: true
-  :menu_item_id
-  validate :quantity_cannot_be_greater_than_stock_level
+  def validate
+    super
+    validates_presence [:quantity, :menu_item_id]
+    quantity_cannot_be_greater_than_stock_level
+  end
 
   def quantity_cannot_be_greater_than_stock_level
     if quantity.present? && quantity > current_stock_level
@@ -12,6 +15,6 @@ class OrderItem < ApplicationRecord
   end
 
   def current_stock_level
-    MenuItemFetcher.stock_level_for(menu_item_id)
+    MenuItemFetcher.menu_item_for(menu_item_id).stock_level || 0
   end
 end

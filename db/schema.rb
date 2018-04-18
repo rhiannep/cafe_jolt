@@ -1,36 +1,29 @@
-# This file is auto-generated from the current state of the database. Instead
-# of editing this file, please use the migrations feature of Active Record to
-# incrementally modify your database, and then regenerate this schema definition.
-#
-# Note that this schema.rb definition is the authoritative source for your
-# database schema. If you need to create the application database on another
-# system, you should be using db:schema:load, not running all the migrations
-# from scratch. The latter is a flawed and unsustainable approach (the more migrations
-# you'll amass, the slower it'll run and the greater likelihood for issues).
-#
-# It's strongly recommended that you check this file into your version control system.
-
-ActiveRecord::Schema.define(version: 2018_04_13_020900) do
-
-  # These are extensions that must be enabled in order to support this database
-  enable_extension "plpgsql"
-  enable_extension "uuid-ossp"
-
-  create_table "order_items", force: :cascade do |t|
-    t.string "menu_item_id"
-    t.integer "quantity"
-    t.bigint "order_id"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.string "menu_item_name"
-    t.index ["order_id"], name: "index_order_items_on_order_id"
+Sequel.migration do
+  change do
+    create_table(:orders) do
+      primary_key :id
+      column :uuid, "uuid", :default=>Sequel::LiteralString.new("uuid_generate_v4()")
+    end
+    
+    create_table(:schema_migrations) do
+      column :filename, "text", :null=>false
+      
+      primary_key [:filename]
+    end
+    
+    create_table(:order_items) do
+      primary_key :id
+      column :quantity, "integer"
+      column :menu_item_id, "text"
+      column :menu_item_name, "text"
+      foreign_key :order_id, :orders, :key=>[:id]
+    end
   end
-
-  create_table "orders", force: :cascade do |t|
-    t.uuid "uuid", default: -> { "uuid_generate_v4()" }
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.string "status", default: "pending"
-  end
-
 end
+              Sequel.migration do
+                change do
+                  self << "SET search_path TO \"$user\", public"
+                  self << "INSERT INTO \"schema_migrations\" (\"filename\") VALUES ('20180417024814_create_orders.rb')"
+self << "INSERT INTO \"schema_migrations\" (\"filename\") VALUES ('20180417025924_create_order_items.rb')"
+                end
+              end

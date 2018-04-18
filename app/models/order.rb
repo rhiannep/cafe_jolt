@@ -1,8 +1,14 @@
-class Order < ApplicationRecord
-  has_many :order_items
-  validates_presence_of :order_items
-  validates_associated :order_items
-  accepts_nested_attributes_for :order_items, reject_if: :all_blank, allow_destroy: true
+class Order < Sequel::Model
+  plugin :validation_helpers
+  plugin :nested_attributes
+
+  one_to_many :order_items
+  nested_attributes :order_items, remove: true
+
+  def validate
+    super
+    validates_presence [:order_items]
+  end
 
   def send_to_kitchen
     response = JobPoster.new(self).send_order_to_kitchen
